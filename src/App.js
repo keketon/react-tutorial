@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { fetchImages } from "./api";
 
-function Form() {
+function Form(props) {
+  function handleSubmit(event) {
+    event.preventDefault();
+    const { breed } = event.target.elements;
+    props.onFormSubmit(breed.value);
+  }
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="field has-addons">
           <div className="control is-expanded">
             <div className="select is-fullwidth">
@@ -78,11 +83,16 @@ function Main() {
       setUrls(urls);
     });
   }, []);
+  function reloadImages(breed) {
+    fetchImages(breed).then((urls) => {
+      setUrls(urls);
+    });
+  }
   return (
     <main>
       <section className="section">
         <div className="container">
-          <Form />
+          <Form onFormSubmit={reloadImages} />
         </div>
       </section>
       <section className="section">
